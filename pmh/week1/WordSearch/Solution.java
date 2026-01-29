@@ -66,7 +66,5 @@ class Solution {
 
             // 결과 출력
             System.out.println("Word 'ABCCED' exists: " + sol.exist(board, word1)); // true
-            System.out.println("Word 'SEE' exists: " + sol.exist(board, word2));    // true
-            System.out.println("Word 'ABCB' exists: " + sol.exist(board, word3));   // false
         }
     }
