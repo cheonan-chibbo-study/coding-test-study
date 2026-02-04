@@ -7,6 +7,7 @@ class Solution {
 
 
         for (int rotate = 0; rotate < 4; rotate++) {
+            //모든 방향으로 움직여서  확인후 회전하기
             key = rotateKey(key);
 
             // 열쇠를 놓을 수 있는 모든 시작 지점 (0,0) ~ (n*2, n*2)
@@ -17,6 +18,7 @@ class Solution {
                     int[][] newLock = new int[n * 3][n * 3];
                     for (int i = 0; i < n; i++) {
                         for (int j = 0; j < n; j++) {
+                            //확장된 자물쇠 중간에 기존 자물쇠 복사하기
                             newLock[i + n][j + n] = lock[i][j];
                         }
                     }

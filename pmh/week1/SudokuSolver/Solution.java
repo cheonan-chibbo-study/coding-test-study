@@ -11,9 +11,11 @@ class Solution {
         int row = s/9;
         int col = s%9;
 
+        //이미 숫자가 있다면 다음 재귀 호출
         if (board[row][col] != '.') {
            return backTrace(board, s +1);
         }
+
 
         for (char c = '1'; c <= '9'; c++) {
             if (isValid(board, col, row, c)) {
