@@ -33,6 +33,7 @@ class Solution {
         visited[0] = true;
         stack.push(0);
 
+
         int visitedCount =1; //방문한 방의 개수 카운트
 
         while(!stack.isEmpty()){
