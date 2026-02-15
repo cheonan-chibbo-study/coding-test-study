@@ -6,6 +6,7 @@ class Solution {
     public List<List<String>> partition(String s) {
         List<List<String>> result = new ArrayList<>();
         dfs(0,s,new ArrayList<>(),result);
+
         return  result;
     }
 
