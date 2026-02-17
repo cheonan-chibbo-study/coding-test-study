@@ -2,7 +2,7 @@ package week3.미로탈출명령어;
 
 import java.util.*;
 
-class SolutionBFS {
+class Solution{
     private final char[] dir = {'d', 'l', 'r', 'u'};
     private final int[] dr = {1, 0, 0, -1};
     private final int[] dc = {0, -1, 1, 0};
