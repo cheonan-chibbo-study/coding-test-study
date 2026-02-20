@@ -7,4 +7,4 @@ https://school.programmers.co.kr/learn/courses/30/lessons/42627
 2. 그러나 우선순위 지정,시간 계산,응답 시간 계산 등의구현이 어려워 시간내에 풀지못해 풀이를 보고 공부하면서 풀었다
 
 # 배운점 
-1. SJF(Shotest Job First) 스케줄링 알고리즘을 구현 하는법 을 알게되었다
+1. SJF(Shotest Job First) 스케줄링 알고리즘을 구현하는법 을 알게되었다.
