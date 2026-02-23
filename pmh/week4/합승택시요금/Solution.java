@@ -6,10 +6,11 @@ class Solution {
 
         int[] fee = new int[n+1];
         Arrays.fill(fee,Integer.MAX_VALUE);
+
         fee[start] =0;
+
         PriorityQueue<int []> pq = new PriorityQueue<>(
                 (one,two) -> one[1] - two[1]);
-
         pq.offer(new int[]{start,0});
 
         while(!pq.isEmpty()){
