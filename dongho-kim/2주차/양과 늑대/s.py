@@ -1,7 +1,6 @@
 SHEEP = 0
 WOLF = 1
 
-# 힌트 얻고 푼 코드
 def solution(info, edges):
     n = len(info)
     graph = [[] for _ in range(n)]
@@ -10,7 +9,7 @@ def solution(info, edges):
         graph[a].append(b)
     answer = 0
 
-    def dfs(visited, sc, wc):
+    def dfs(visited: set[int], sc, wc):
         nonlocal answer
         answer = max(answer, sc)
 
@@ -20,16 +19,16 @@ def solution(info, edges):
                     continue
 
                 if info[nxt] == SHEEP:
-                    visited.append(nxt)
+                    visited.add(nxt)
                     dfs(visited, sc + 1, wc)
-                    visited.pop()
+                    visited.remove(nxt)
                 elif info[nxt] == WOLF:
                     if wc + 1 < sc:
-                        visited.append(nxt)
+                        visited.add(nxt)
                         dfs(visited, sc, wc + 1)
-                        visited.pop()
+                        visited.remove(nxt)
 
-    visited = [0]
+    visited = {0}
     dfs(visited, 1, 0)
 
     return answer
