@@ -42,7 +42,9 @@ class Solution {
 
     public boolean qennCheck(int row, int col,boolean[][] chessBoard, int n) {
 
-        //우쪽 세로 방향 체크
+
+        //위쪽 세로 방향 체크
+
         for (int i = 0; i < row; i++) {
             if(chessBoard[i][col])return false;
         }
