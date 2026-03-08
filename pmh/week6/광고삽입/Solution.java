@@ -6,7 +6,7 @@ class Solution {
         int advSeconds = toSeconds(adv_time);
 
         // 초 단위로 시청자 수 변화를 기록할 배열
-        // playSeconds + 2 로 넉넉하게 잡아줌
+        // playSeconds + 2 로 넉넉하게 잡아준다
         long[] timeline = new long[playSeconds + 2];
 
         // 2. 각 로그를 시작/끝 시간으로 나누어서
