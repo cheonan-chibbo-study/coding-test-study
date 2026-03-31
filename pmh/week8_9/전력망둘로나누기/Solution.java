@@ -1,4 +1,4 @@
-package week8.전력망둘로나누기;
+package week8_9.전력망둘로나누기;
 import java.util.*;
 
 class Solution {

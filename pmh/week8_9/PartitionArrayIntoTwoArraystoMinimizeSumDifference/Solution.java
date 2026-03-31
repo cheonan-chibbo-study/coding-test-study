@@ -1,4 +1,4 @@
-package week8.PartitionArrayIntoTwoArraystoMinimizeSumDifference;
+package week8_9.PartitionArrayIntoTwoArraystoMinimizeSumDifference;
 
 import java.util.*;
 
