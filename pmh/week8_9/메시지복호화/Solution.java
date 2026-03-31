@@ -1,5 +1,5 @@
-package week8.메시지복호화;
-import java.util.*;
+package week8_9.메시지복호화;
+
 class Solution {
     public String solution(String m, String k) {
         StringBuilder answer = new StringBuilder();

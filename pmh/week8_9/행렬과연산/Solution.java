@@ -1,4 +1,4 @@
-package week8.행렬과연산;
+package week8_9.행렬과연산;
 import java.util.*;
 
 class Solution {

@@ -1,4 +1,4 @@
-package week8.모음사전;
+package week8_9.모음사전;
 class Solution {
     char[] words = {'A', 'E', 'I', 'O', 'U'};
     int count = 0;

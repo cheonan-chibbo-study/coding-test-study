@@ -1,4 +1,4 @@
-package week8.카펫;
+package week8_9.카펫;
 
 class Solution {
     public int[] solution(int brown, int yellow) {
