@@ -16,6 +16,6 @@ https://school.programmers.co.kr/learn/courses/30/lessons/468370
 평문으로 나온 적 있으면 제외  
 이전에 공개된 스포 단어와 같으면 제외  
 둘 다 아니면 answer++  
-이렇게 처리한다.
+이렇게 처리한다. 
 
 # 배운점 
