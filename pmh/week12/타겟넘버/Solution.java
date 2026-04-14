@@ -1,4 +1,4 @@
-package week12.sample;
+package week12.타겟넘버;
 
 class Solution {
     /*
