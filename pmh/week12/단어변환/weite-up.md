@@ -18,3 +18,48 @@ https://school.programmers.co.kr/learn/courses/30/lessons/43163?utm_source=chatg
 # 배운점 
 문자 비교까지는 떠올려서 문자 차리를 만드는 함수를 만드는데 toCharArray() 를 사용해 일일 해 
 char 배열을 만들어서했는데 그냥 String.charAt() 를 사용하면 된다는걸 알게됬다
+
+# DFS 풀이
+```java
+import java.util.*;
+
+class Solution {
+    int answer = Integer.MAX_VALUE;
+    boolean[] visited;
+
+    public int solution(String begin, String target, String[] words) {
+        visited = new boolean[words.length];
+
+        dfs(begin, target, words, 0);
+
+        return answer == Integer.MAX_VALUE ? 0 : answer;
+    }
+
+    public void dfs(String current, String target, String[] words, int count) {
+        if (current.equals(target)) {
+            answer = Math.min(answer, count);
+            return;
+        }
+
+        for (int i = 0; i < words.length; i++) {
+            if (!visited[i] && canChange(current, words[i])) {
+                visited[i] = true;
+                dfs(words[i], target, words, count + 1);
+                visited[i] = false; // 백트래킹
+            }
+        }
+    }
+
+    public boolean canChange(String a, String b) {
+        int diff = 0;
+
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) != b.charAt(i)) {
+                diff++;
+            }
+        }
+
+        return diff == 1;
+    }
+}
+```
