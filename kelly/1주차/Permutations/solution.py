@@ -1,21 +1,21 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         # 메서드
-        def backTracking(temp, result):
+        def recursive(temp, result):
             if len(temp) == len(nums):
-                result.append(temp[:])
+                result.append(temp[::])
                 return
-            
-            for i in (nums):
-                if i in temp:
+
+            for n in nums:
+                if n in temp:
                     continue
 
-                temp.append(i)
-                backTracking(temp, result)
+                temp.append(n)
+                recursive(temp, result)
                 temp.pop()
-        
-        # 메인 로직
-        result = []
-        backTracking([], result)
 
-        return result
+        # 메인 로직
+        answer = []
+        recursive([], answer)
+
+        return answer
