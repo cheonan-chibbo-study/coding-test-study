@@ -18,4 +18,4 @@ class Solution:
         answer = []
         recursive([], answer)
 
-        return answer성
+        return answer
