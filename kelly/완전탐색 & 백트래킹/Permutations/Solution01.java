@@ -1,16 +1,22 @@
 import java.util.*;
 
 class Solution {
+
+    int[] nums;
+
     public List<List<Integer>> permute(int[] nums) {
+        this.nums = nums;
+
+        // 메인 로직
         List<List<Integer>> answer = new ArrayList<>();
-        recursive(new ArrayList<Integer>(), answer, nums);
+        recursive(new ArrayList<Integer>(), answer);
 
         return answer;
     }
 
-    private void recursive(List<Integer> temp, List<List<Integer>> result, int[] nums) {
+    private void recursive(List<Integer> temp, List<List<Integer>> result) {
         if (temp.size() == nums.length) {
-            result.add(new ArrayList<>(temp));
+            result.add(new ArrayList<Integer>(temp));
             return;
         }
 
@@ -20,7 +26,7 @@ class Solution {
             }
 
             temp.add(nums[i]);
-            recursive(temp, result, nums);
+            recursive(temp, result);
             temp.remove(temp.size() - 1);
         }
     }
