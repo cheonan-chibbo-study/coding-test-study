@@ -35,56 +35,75 @@
 
 **`[ Python ]`**
 
-```python
-class Solution:
-    def combine(self, n: int, k: int) -> List[List[int]]:
-        # 메서드
-        def recursive(temp, result, start):
-            if len(temp) == k:
-                result.append(temp[::])
-                return
+- solution01 - 별도 라이브러리 없이 직접 코드 구현
 
-            for i in range(start, n + 1):
-                temp.append(i)
-                recursive(temp, result, i + 1)
-                temp.pop()
+    ```python
+    class Solution:
+        def combine(self, n: int, k: int) -> List[List[int]]:
+            # 메서드
+            def recursive(temp, result, start):
+                if len(temp) == k:
+                    result.append(temp[::])
+                    return
+    
+                for i in range(start, n + 1):
+                    temp.append(i)
+                    recursive(temp, result, i + 1)
+                    temp.pop()
+    
+            # 메인 로직
+            answer = []
+            recursive([], answer, 1)
+            return answer
+    ```
 
-        # 메인 로직
-        answer = []
-        recursive([], answer, 1)
-        return answer
-```
+- solution02 - 파이썬 모듈 사용
+
+    ```python
+    from itertools import combinations
+    
+    class Solution:
+        def combine(self, n: int, k: int) -> List[List[int]]:
+            # 메인 로직
+            candi = [i for i in range(1, n + 1)]
+            combi_list = combinations(candi, k)
+            return [list(combi) for combi in combi_list]
+    ```
+
 
 **`[ Java ]`**
 
-```java
-import java.util.*;
+- solution01 - 별도 라이브러리 없이 직접 코드 구현
 
-class Solution {
-    public List<List<Integer>> combine(int n, int k) {
-        List<List<Integer>> answer = new ArrayList<>();
-        recursive(new ArrayList<Integer>(), answer, 1, n, k);
-
-        return answer;
-    }
-
-    private void recursive(List<Integer> temp, List<List<Integer>> result, int start, int n, int k) {
-        if (temp.size() == k) {
-            result.add(new ArrayList<Integer>(temp));
-            return;
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public List<List<Integer>> combine(int n, int k) {
+            List<List<Integer>> answer = new ArrayList<>();
+            recursive(new ArrayList<Integer>(), answer, 1, n, k);
+    
+            return answer;
         }
-
-        for (int i = start; i <= n; i++) {
-            temp.add(i);
-            recursive(temp, result, i + 1, n, k);
-            temp.remove(temp.size() - 1);
+    
+        private void recursive(List<Integer> temp, List<List<Integer>> result, int start, int n, int k) {
+            if (temp.size() == k) {
+                result.add(new ArrayList<Integer>(temp));
+                return;
+            }
+    
+            for (int i = start; i <= n; i++) {
+                temp.add(i);
+                recursive(temp, result, i + 1, n, k);
+                temp.remove(temp.size() - 1);
+            }
         }
     }
-}
-```
+    ```
 
 ---
 
 ## 🥰 배운점 & 느낀점
 
 - 재귀를 활용해 직접 조합 코드를 작성하는 연습을 할 수 있었다.
+- 파이썬은 강력한 조합 라이브러리가 있는데 자바는 별도로 제공하는 조합 라이브러리가 없다… 어쩔 수 없이 직접 조합을 구현하는 코드를 미리 연습해야한다.
