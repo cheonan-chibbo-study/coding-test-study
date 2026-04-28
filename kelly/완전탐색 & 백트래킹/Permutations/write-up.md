@@ -34,64 +34,84 @@
 
 ### 내가 처음 작성한 코드
 
-**`[ Python ]`**
+혼자서 코드 구현에 성공했다. 아래 최종 정답 코드를 참고하자.
 
-```python
-class Solution:
-    def permute(self, nums: List[int]) -> List[List[int]]:
-        # 메서드
-        def recursive(temp, result):
-            if len(temp) == len(nums):
-                result.append(temp[::])
-                return
+---
 
-            for n in nums:
-                if n in temp:
-                    continue
-                
-                temp.append(n)
-                recursive(temp, result)
-                temp.pop()
-                
-        # 메인 로직
-        answer = []
-        recursive([], answer)
+## 🧑‍💻 최종 정답 코드
 
-        return answer
-```
+### Python 풀이
 
-**`[ Java ]`**
+- solution01 - 별도 라이브러리 없이 직접 코드 구현
 
-```java
-import java.util.*;
+    ```python
+    class Solution:
+        def permute(self, nums: List[int]) -> List[List[int]]:
+            # 메서드
+            def recursive(temp, result):
+                if len(temp) == len(nums):
+                    result.append(temp[::])
+                    return
+    
+                for n in nums:
+                    if n in temp:
+                        continue
+                    
+                    temp.append(n)
+                    recursive(temp, result)
+                    temp.pop()
+                    
+            # 메인 로직
+            answer = []
+            recursive([], answer)
+    
+            return answer
+    ```
 
-class Solution {
-    public List<List<Integer>> permute(int[] nums) {
-        List<List<Integer>> answer = new ArrayList<>();
-        recursive(new ArrayList<Integer>(), answer, nums);
+- solution02 - 파이썬 모듈 사용
 
-        return answer;
-    }
+    ```python
+    from itertools import permutations
+    
+    class Solution:
+        def permute(self, nums: List[int]) -> List[List[int]]:
+            # 메인 로직
+            return [p for p in permutations(nums)]
+    ```
 
-    private void recursive(List<Integer> temp, List<List<Integer>> result, int[] nums) {
-        if (temp.size() == nums.length) {
-            result.add(new ArrayList<>(temp));
-            return;
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public List<List<Integer>> permute(int[] nums) {
+            List<List<Integer>> answer = new ArrayList<>();
+            recursive(new ArrayList<Integer>(), answer, nums);
+    
+            return answer;
         }
-
-        for (int i = 0; i < nums.length; i++) {
-            if (temp.contains(nums[i])) {
-                continue;
+    
+        private void recursive(List<Integer> temp, List<List<Integer>> result, int[] nums) {
+            if (temp.size() == nums.length) {
+                result.add(new ArrayList<>(temp));
+                return;
             }
-
-            temp.add(nums[i]);
-            recursive(temp, result, nums);
-            temp.remove(temp.size() - 1);
+    
+            for (int i = 0; i < nums.length; i++) {
+                if (temp.contains(nums[i])) {
+                    continue;
+                }
+    
+                temp.add(nums[i]);
+                recursive(temp, result, nums);
+                temp.remove(temp.size() - 1);
+            }
         }
     }
-}
-```
-
+    ```
 ---
 
 ## 🥰 배운점 & 느낀점
