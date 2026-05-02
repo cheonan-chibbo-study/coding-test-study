@@ -1,0 +1,315 @@
+## 👀 제한 시간 안에 어디까지 해냈는가?
+
+- 큐 활용 풀이로 시도
+    - Java로 처음 도전하여 `12분 24초`만에 문제를 해결했다. (P & J 트레이닝)
+    - Python으로 2차 풀이를 진행하여 `3분 33초`만에 문제를 해결했다. (P & J 트레이닝)
+- 투 포인터 풀이로 시도
+    - Java로 처음 도전하여 `12분 40초`만에 문제를 해결했다. (P & J 트레이닝)
+    - Python으로 2차 풀이를 진행하여 `5분 33초`만에 문제를 해결했다. (P & J 트레이닝)
+
+---
+
+## 🧑‍🔬 문제 분석
+
+크기가 같은 두 큐가 주어졌을  때 각 큐의 요소를 삽입 + 제거하는 과정을 최소로 하여 두 큐의 합을 맞출 수 있는 횟수를 반환하는 문제이다. 만약 어떤 방식으로도 두 큐의 합을 맞출 수 없다면 -1을 반환해야한다.
+
+문제에 주어지는 제약 조건은 다음과 같다.
+
+### 제한사항
+
+- 1 ≤ `queue1`의 길이 = `queue2`의 길이 ≤ 300,000
+- 1 ≤ `queue1`의 원소, `queue2`의 원소 ≤ 10^9
+- 주의: 언어에 따라 합 계산 과정 중 산술 오버플로우 발생 가능성이 있으므로 long type 고려가 필요합니다.
+
+---
+
+## 🤔 풀이 고민
+
+### Queue 활용
+
+- P & J 이전 풀이에서 범한 멍청한 실수…
+
+  제한시간안에 이 문제를 해결하지 못했다. 이 문제를 시간안에 풀지 못한 이유는 정말 멍청한 실수를 했기 때문이다.
+
+  처음 이문제를 해결할 아이디어로 아래와 같은 생각을 하였다.
+
+    - q1, q2 각각의 합을 비교해서 합이 더 큰 큐의 요소를 적은쪽의 큐에 삽입하며 합이 일치할 때 까지 반복
+
+  하지만 문제에서 설명하는 케이스를 보고 만약 큐가 다음과 같이 주어졌을 때
+
+    ```
+    queue1 = [3, 2, 7, 2]  # 초기 합 14
+    queue2 = [4, 6, 5, 1]  # 초기 합 16
+    ```
+
+    - 내가 생각한 방식을 사용하면 당장 초기합은 q2가 높으므로 q2의 요소를 먼저 빼서 q1에 줘야하는데
+    - 문제에서는 q1의 요소를 먼저 제거하고 q2에 삽입하는걸 시작으로 최소 횟수를 달성했기 때문에 내 방식은 문제에서 설명하는 순서와 달라 이 방식이 먹히지 않을거라고 바로 단정지었기 때문에 결국 다른 해결책을 시간안에 떠올리지 못했다.
+    - 하지만 처음 내가 생각했던 방식도 문제에서 설명하는 방식과 순서만 다를뿐 결국 2번만에 해결할 수 있는건 마찬가지였다.
+
+  생각했던 방식이 정말 문제에서 설명하는 방식보다 더 오래걸렸는지 끝까지 확인도 안했으면서 바로 이 방식은 불가능하다고 단정지었기 때문에 결국 다른 해결책도 찾지 못하고 문제를 해결할 수 없었다. 이건 정말 너무 멍청한 실수다. 앞으로는 생각한 방식이 정말 불가능한지 끝까지 확인하도록 주의해야겠다.
+
+
+위에 기술했듯 처음 생각했던 방식으로 풀이를 작성했다면 큐의 특성을 활용하는 코드를 작성했을텐데 큐는 삽입/삭제에 총 O(1)이 걸리고, 모든 큐의 요소를 섞어보는 과정은 최대 4n번이 걸리기 때문에 문제에 주어지는 최대 큐의 길이 300,000를 대입해도 연산 횟수가 10^8에 미치지 못하므로 충분히 해결할 수 있다.
+
+### 투 포인터
+
+생각해낸 풀이법은 큐 대신 투 포인터 방식을 활용해도 문제를 해결할 수 있다. 따로 자료구조의 삽입/삭제가 없기 때문에 역시 최대 크기의 입력이 들어와도 문제없이 문제를 해결할 수 있다.
+
+### 결론
+
+- 큐 활용, 투 포인터 방식을 사용해 문제를 해결할 수 있다.
+
+---
+
+## 🏃 코드 작성 과정
+
+- 이전 풀이해서 범한 실수를 코드 작성에서 고치는 과정
+
+  ### 구현하지 못한 부분 구현
+
+  풀이법을 결정하지 못해 코드 구현도 초기에는 하지 못했다. 생각했던 방식을 코드로 구현하는건 아주 간단하다.
+
+    ```python
+    from collections import deque
+    
+    def solution(queue1, queue2):
+        # 메인 로직
+        q1_sum = sum(queue1)
+        q2_sum = sum(queue2)
+        q1 = deque(queue1)
+        q2 = deque(queue2)
+        
+        count = 0
+        for i in range(4 * len(queue1)):
+            if q1_sum == q2_sum:
+                return count
+            elif q1_sum > q2_sum:
+                tmp = q1.popleft()
+                q2.append(tmp)
+                q1_sum -= tmp
+                q2_sum += tmp
+            else:
+                tmp = q2.popleft()
+                q1.append(tmp)
+                q1_sum += tmp
+                q2_sum -= tmp
+            count += 1
+        
+        return -1
+    ```
+
+  위 방식을 투 포인터로 구현하면 다음과 같다.
+
+    ```python
+    def solution(queue1, queue2):
+        queue_size = len(queue1)
+        total_queue = queue1 + queue2
+        total_sum = sum(total_queue)
+        queue1_sum = sum(queue1)
+        queue2_sum = sum(queue2)
+        left = 0
+        right = len(queue1)
+    
+        cnt = 0
+        while cnt < queue_size * 4:
+            if (queue1_sum == queue2_sum):
+                return cnt
+            elif queue1_sum > queue2_sum:
+                queue1_sum -= total_queue[left]
+                queue2_sum = total_sum - queue1_sum
+                left = (left + 1) % len(total_queue)
+            else:
+                queue1_sum += total_queue[right]
+                queue2_sum = total_sum - queue1_sum
+                right = (right + 1) % len(total_queue)
+            
+            cnt += 1
+        
+        return -1
+    ```
+
+  ### 최종 정답 코드 개선
+
+  GPT한테 물어봤는데 유용한 함수 추천은 따로 없었다. 사실 이전 문제 풀이들도 뭔가 유용한 함수는 없어도 변수명 수정이나 로직 수정정도를 추천해줘도 그대로 반영했는데 앞으로는 유용한 함수 위주로 개선하고 없으면 사용한 코드를 그대로 푸시하겠다.
+
+  이번 문제는 내가 작성한 로직들을 그대로 사용한다.
+
+
+P & J 트레이닝에서는 Java & Python으로 무리없이 코드를 작성했다. 최종 정답 코드를 참고하자.
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01 - 큐 활용 풀이
+
+    ```python
+    from collections import deque
+    
+    def solution(queue1, queue2):
+        dq1 = deque(queue1)
+        dq2 = deque(queue2)
+        
+        q1_sum = sum(queue1)
+        q2_sum = sum(queue2)
+        
+        answer = 0
+        
+        for i in range(4 * len(queue1)):
+            if q1_sum == q2_sum:
+                return answer
+            
+            if q1_sum > q2_sum:
+                popped = dq1.popleft()
+                dq2.append(popped)
+                
+                q1_sum -= popped
+                q2_sum += popped
+            else:
+                popped = dq2.popleft()
+                dq1.append(popped)
+                
+                q1_sum += popped
+                q2_sum -= popped
+            
+            answer += 1
+        
+        return -1
+    ```
+
+- solution02- 투 포인터 풀이
+
+    ```python
+    def solution(queue1, queue2):
+        q_size = len(queue1)
+        q1_sum = sum(queue1)
+        q2_sum = sum(queue2)
+        
+        dq = queue1[::]
+        dq.extend(queue2)
+        
+        answer = 0
+        left = 0
+        right = q_size
+        
+        for i in range(q_size * 4):
+            if q1_sum == q2_sum:
+                return answer
+            
+            if q1_sum > q2_sum:
+                q1_sum -= dq[left]
+                q2_sum += dq[left]
+                left = (left + 1) % len(dq)
+            else:
+                q1_sum += dq[right]
+                q2_sum -= dq[right]
+                right = (right + 1) % len(dq)
+            
+            answer += 1
+        
+        return -1
+    ```
+
+
+### Java 풀이
+
+- solution01 - 큐 활용 풀이
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int solution(int[] queue1, int[] queue2) {
+            Deque<Integer> dq1 = new ArrayDeque<>();
+            Deque<Integer> dq2 = new ArrayDeque<>();
+            
+            long qSize = queue1.length;
+            long q1Sum = 0;
+            long q2Sum = 0;
+            
+            for (int n : queue1) {
+                q1Sum += n;
+                dq1.offer(n);
+            }
+            
+            for (int n : queue2) {
+                q2Sum += n;
+                dq2.offer(n);
+            }
+            
+            // 메인 로직
+            int answer = 0;
+            
+            for (int i = 0; i < qSize * 4; i++) {
+                if (q1Sum == q2Sum) {
+                    return answer;
+                }
+                
+                if (q1Sum > q2Sum) {
+                    int popped = dq1.poll();
+                    dq2.offer(popped);
+                    q1Sum -= popped;
+                    q2Sum += popped;
+                } else {
+                    int popped = dq2.poll();
+                    dq1.offer(popped);
+                    q1Sum += popped;
+                    q2Sum -= popped;
+                }
+                
+                answer += 1;
+            }
+            
+            return -1;
+        }
+    }
+    ```
+
+- solution02- 투 포인터 풀이
+
+    ```java
+    class Solution {
+        public int solution(int[] queue1, int[] queue2) {
+            int qSize = queue1.length;
+            int[] dq = new int[qSize * 2];
+            long q1Sum = 0;
+            long q2Sum = 0;
+            
+            for (int i = 0; i < qSize; i++) {
+                dq[i] = queue1[i];
+                q1Sum += queue1[i];
+            }
+            
+            for (int i = 0; i < qSize; i++) {
+                dq[qSize + i] = queue2[i];
+                q2Sum += queue2[i];
+            }
+            
+            int answer = 0;
+            int left = 0;
+            int right = qSize;
+            
+            for (int i = 0; i < qSize * 4; i++) {
+                if (q1Sum == q2Sum) {
+                    return answer;
+                }
+                
+                if (q1Sum > q2Sum) {
+                    q1Sum -= dq[left];
+                    q2Sum += dq[left];
+                    left = (left + 1) % (dq.length);
+                } else {
+                    q1Sum += dq[right];
+                    q2Sum -= dq[right];
+                    right = (right + 1) % (dq.length);
+                }
+                
+                answer += 1;
+            }
+            
+            return -1;
+        }
+    }
+    ```
