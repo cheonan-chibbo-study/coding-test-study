@@ -2,6 +2,11 @@
 
 `12분 50초`만에 혼자 문제를 풀긴 했는데 잘못된 로직 하나를 찾지 못해 AI의 도움을 받았다…
 
+P & J 트레이닝
+
+- Java로 도전하여 `21분 36초`만에 문제를 해결했다.
+- Python으로 2차 풀이를 시도하여 `4분 24초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -84,8 +89,85 @@ def solution(progresses, speeds):
 
 ### Python 풀이
 
+- solution01
+
+    ```python
+    from collections import deque
+    from math import ceil
+    
+    def solution(progresses, speeds):
+        dq = deque([i for i in range(len(progresses))]);
+        answer = []
+        
+        while dq:
+            popped = dq.popleft()
+            count = 1
+            need_day = 0
+            if (progresses[popped] < 100):
+                need_day = ceil((100 - progresses[popped]) / speeds[popped])
+            
+            for i in range(popped + 1, len(progresses)):
+                progresses[i] += need_day * speeds[i]
+            
+            while dq and progresses[dq[0]] >= 100:
+                dq.popleft()
+                count += 1
+            
+            answer.append(count)
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int[] solution(int[] progresses, int[] speeds) {
+            Deque<Integer> dq = new ArrayDeque<>();
+            for (int i = 0; i < progresses.length; i++) {
+                dq.offer(i);
+            }
+            
+            List<Integer> answer = new ArrayList<>();
+            while (!dq.isEmpty()) {
+                int popped = dq.poll();
+                int count = 1;
+                int needDay = 0;
+                if (progresses[popped] < 100) {
+                    needDay = (int) Math.ceil((100.0 - progresses[popped]) / speeds[popped]);
+                }
+                
+                for (int i = popped + 1; i < progresses.length; i++) {
+                    progresses[i] += (needDay * speeds[i]);
+                }
+                
+                while (!dq.isEmpty() && progresses[dq.peek()] >= 100) {
+                    dq.poll();
+                    count++;
+                }
+                
+                answer.add(count);
+            }
+            
+            int[] arrAnswer = new int[answer.size()];
+            for (int i = 0; i < answer.size(); i++) {
+                arrAnswer[i] = answer.get(i);
+            }
+            
+            return arrAnswer;
+        }
+    }
+    ```
+
+
 ---
 
 ## 🥰 배운점 & 느낀점
 
 - 혼자서 잘 풀었는데 딱 사소한 하나의 논리 오류 때문에 문제를 틀렸다. 이런 억울한 실수를 하지 않도록 주의할 필요가 있다.
+- 소수의 올림, 내림, 반올림 함수를 익혔다.
