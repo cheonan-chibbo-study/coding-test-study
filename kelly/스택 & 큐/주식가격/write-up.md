@@ -2,6 +2,11 @@
 
 `10분 15초`만에 문제를 해결했다.
 
+P & J 트레이닝
+
+- Java로 처음 시도하여 `7분 12초`만에 문제를 해결했다.
+- Python으로 2차 풀이를 시도하여 `3분 33초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -48,6 +53,69 @@ def solution(prices):
     
     return answer
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    def solution(prices):
+        stack = []
+        answer = [0] * len(prices)
+        
+        for day in range(len(prices)):
+            if stack:
+                while stack and stack[-1][0] > prices[day]:
+                    popped = stack.pop()
+                    answer[popped[1]] = day - popped[1]
+            
+            stack.append((prices[day], day))
+        
+        while stack:
+            popped = stack.pop()
+            answer[popped[1]] = (len(prices) - 1) - popped[1]
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int[] solution(int[] prices) {
+            Deque<int[]> dq = new ArrayDeque<>();
+            int[] answer = new int[prices.length];
+            
+            for (int day = 0; day < prices.length; day++) {
+                if (!dq.isEmpty()) {
+                    while (!dq.isEmpty() && dq.peek()[0] > prices[day]) {
+                        int[] popped = dq.pop();
+                        answer[popped[1]] = day - popped[1];
+                    }
+                }
+                
+                dq.push(new int[]{prices[day], day});
+            }
+            
+            while (!dq.isEmpty()) {
+                int[] popped = dq.pop();
+                answer[popped[1]] = (prices.length - 1) - popped[1];
+            }
+            
+            return answer;
+        }
+    }
+    ```
+
 
 ---
 
