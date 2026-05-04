@@ -2,6 +2,11 @@
 
 혼자서 코드 구현을 하지 못했다.
 
+P & J 트레이닝
+
+- Java로 처음 시도하여 `20분 43초`만에 문제를 해결했다.
+- Python으로 2차 풀이를 시도하여 `2분 30초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -63,6 +68,80 @@ def solution(bridge_length, weight, truck_weights):
     
     return time
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import deque
+    
+    def solution(bridge_length, weight, truck_weights):
+        ready = deque(truck_weights)
+        bridge = deque([0] * bridge_length)
+        
+        total_w = 0
+        time = 0
+        
+        while ready:
+            time += 1
+            total_w -= bridge.popleft()
+            
+            if (weight - total_w) >= ready[0]:
+                cur = ready.popleft()
+                total_w += cur
+                bridge.append(cur)
+            else:
+                bridge.append(0)
+            
+        return time + bridge_length
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int solution(int bridge_length, int weight, int[] truck_weights) {
+            Deque<Integer> ready = new ArrayDeque<>();
+            for (int t : truck_weights) {
+                ready.offer(t);
+            }
+            
+            Deque<Integer> bridge = new ArrayDeque<>();
+            for (int i = 0; i < bridge_length; i++) {
+                bridge.offer(0);
+            }
+            
+            int totalW = 0;
+            int time = 0;
+            
+            while (!ready.isEmpty()) {
+                time += 1;
+                totalW -= bridge.poll();
+                
+                if ((weight - totalW) >= ready.peek()) {
+                    int cur = ready.poll();
+                    totalW += cur;
+                    bridge.offer(cur);  
+                } else {
+                    bridge.offer(0);
+                }
+            }
+            
+            return time + bridge_length;
+        }
+    }
+    ```
+
 
 ---
 
