@@ -2,6 +2,11 @@
 
 `26분 42초`만에 혼자서 문제를 풀었다.
 
+P & J 트레이닝
+
+- Java로 처음 시도하여 `6분 12초`만에 문제를 해결했다.
+- Python으로 2차 풀이를 진행하여 `1분 31초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -51,24 +56,55 @@
 
 ### 내가 처음 작성한 코드
 
-```python
-from itertools import combinations
+혼자서 Java & Python으로 쉽게 코드를 작성했다. 최종 정답 코드를 참고하자.
 
-def solution(clothes):
-    # 메인 로직
-    c_dict = {}
-    for item, category in clothes:
-        if category in c_dict:
-            c_dict[category] += 1
-        else:
-            c_dict[category] = 1
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    def solution(clothes):
+        c_dict = {}
+        
+        for v1, v2 in clothes:
+            c_dict[v2] = c_dict.get(v2, 0) + 1
+        
+        answer = 1
+        for v in c_dict.values():
+            answer *= (v + 1)
+        
+        return answer - 1
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
     
-    answer = 1
-    for v in c_dict.values():
-        answer *= (v + 1)
-    
-    return answer - 1
-```
+    class Solution {
+        public int solution(String[][] clothes) {
+            Map<String, Integer> map = new HashMap<>();
+            for (String[] c : clothes) {
+                map.put(c[1], map.getOrDefault(c[1], 0) + 1);
+            }
+            
+            int answer = 1;
+            for (int v : map.values()) {
+                answer *= (v + 1);
+            }
+            
+            return answer - 1;
+        }
+    }
+    ```
+
 
 ---
 
