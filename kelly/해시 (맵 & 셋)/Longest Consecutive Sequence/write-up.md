@@ -4,6 +4,12 @@
 
 결론적으로 혼자서 문제를 풀지 못해 풀이를 찾아보았다. 찾아본 풀이로 작성한 코드를 복기하면서 해시 테이블 or 해시 셋의 활용 사례를 체화할 필요가 있다.
 
+P & J 트레이닝
+
+- 풀이를 떠올리지 못해서 이전에 정리한 풀이를 읽어보고 풀었다…
+- 풀이 확인 후 Java 코드 작성에 `2분 21초`가 걸렸다.
+- 풀이 확인 후 Python 코드 작성에 `2분 21초`가 걸렸다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -49,7 +55,7 @@
 
 위에 기술한 풀이를 코드로 구현하면 다음과 같다. 코드는 Hash Table을 사용한 코드와 Hash Set을 사용한 코드를 각각 작성했다.
 
-[ Hash Table을 사용해서 구현 ]
+[ Hash Map을 사용해서 구현 ]
 
 ```python
 class Solution:
@@ -61,7 +67,7 @@ class Solution:
         num_dict = {}
         for num in nums:
             num_dict[num] = True
-        
+
         #✅ 해시테이블을 순회한다.
         for num in num_dict:
             #✅ 만약 이전 숫자가 존재하지 않는다면, 개수를 1로 초기화한다.
@@ -97,13 +103,77 @@ class Solution:
                 while target in num_set:
                     target += 1
                     cnt += 1
-                
+
                 answer = max(answer, cnt)
 
         return answer
 ```
 
 - 참고로 위 코드를 `for num in nums:`로 작성하면 시간 초과가 발생한다. 중복된 정수에 대해서도 모두 탐색을 진행하기 때문이다.
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01 - Hash Set을 사용한 풀이
+
+    ```python
+    class Solution:
+        def longestConsecutive(self, nums: List[int]) -> int:
+            n_set = set(nums)
+
+            answer = 0
+            for n in n_set:
+                if n - 1 not in n_set:
+                    cnt = 1
+                    target = n + 1
+
+                    while target in n_set:
+                        cnt += 1
+                        target += 1
+
+                    answer = max(answer, cnt)
+
+            return answer
+    ```
+
+
+### Java 풀이
+
+- solution01 - Hash Set을 사용한 풀이
+
+    ```java
+    import java.util.*;
+
+    class Solution {
+        public int longestConsecutive(int[] nums) {
+            Set<Integer> set = new HashSet<>();
+            for (int n : nums) {
+                set.add(n);
+            }
+
+            int answer = 0;
+            for (int n : set) {
+                if (!set.contains(n - 1)) {
+                    int cnt = 1;
+                    int target = n + 1;
+
+                    while (set.contains(target)) {
+                        cnt += 1;
+                        target += 1;
+                    }
+
+                    answer = Math.max(answer, cnt);
+                }
+            }
+
+            return answer;
+        }
+    }
+    ```
+
 
 ---
 
