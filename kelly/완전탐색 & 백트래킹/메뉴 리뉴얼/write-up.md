@@ -64,6 +64,11 @@ def solution(orders, course):
     return answer
 ```
 
+P & J 트레이닝
+
+- Java로 처음 시도하여 제한 시간 `30분` + 추가 시간 `14분34초`를 사용해 혼자 문제를 해결할 수 있었다.
+- Python으로 2차 풀이를 시도하여 `12분 33초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -227,15 +232,146 @@ def solution(orders, course):
 
 ### Python 풀이
 
+- solution01
+
+    ```python
+    from itertools import combinations
+    from collections import Counter
+    
+    def solution(orders, course):
+        menus = [sorted(order) for order in orders]
+        
+        # 메서드
+        def get_maximum_order(cnt):
+            courses = []
+            for menu in menus:
+                combi = ["".join(c) for c in combinations(menu, cnt)]
+                courses.extend(combi)
+            
+            order_count = Counter(courses)
+            result = []
+            maximum = -1
+            for k, v in order_count.items():
+                if v >= 2:
+                    if v > maximum:
+                        result = [k]
+                        maximum = v
+                    elif v == maximum:
+                        result.append(k)
+                            
+            return result
+        
+        # 메인 로직
+        answer = []
+        for cnt in course:
+            maximum_order = get_maximum_order(cnt)
+            answer.extend(maximum_order)
+        
+        return sorted(answer)
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        
+        String[] orders;
+        int[] course;
+        
+        List<List<String>> menus = new ArrayList<>();
+        
+        public String[] solution(String[] orders, int[] course) {
+            this.orders = orders;
+            this.course = course;
+            for (String order : orders) {
+                String[] menuArr = order.split("");
+                List<String> menuItem = new ArrayList<>();
+                for (int i = 0; i < order.length(); i++) {
+                    menuItem.add(menuArr[i]);
+                }
+                
+                Collections.sort(menuItem);
+                menus.add(menuItem);
+            }
+            
+            // 메인 로직
+            List<String> answer = new ArrayList<>();
+            
+            for (int cnt : course) {
+                List<String> maximumOrder = getMaximumOrder(cnt);
+                for (String o : maximumOrder) {
+                    answer.add(o);
+                }
+            }
+            
+            Collections.sort(answer);
+            
+            String[] arrAnswer = new String[answer.size()];
+            for (int i = 0; i < answer.size(); i++) {
+                arrAnswer[i] = answer.get(i);
+            }
+            
+            return arrAnswer;
+        }
+        
+        private List<String> getMaximumOrder(int cnt) {
+            Map<String, Integer> orderCount = new HashMap<>();
+            StringBuilder sb = new StringBuilder();
+            
+            for (List<String> menu : menus) {
+                getCombi(menu, orderCount, sb, cnt, 0);
+            }
+            
+            int maximum = -1;
+            List<String> result = new ArrayList<>();
+            for (String c : orderCount.keySet()) {
+                int orderCnt = orderCount.get(c);
+                
+                if (orderCnt >= 2) {
+                    if (orderCnt > maximum) {
+                        result = new ArrayList<>();
+                        result.add(c);
+                        maximum = orderCnt;
+                    } else if (orderCnt == maximum) {
+                        result.add(c);
+                    }
+                }
+            }
+            
+            return result;
+        }
+        
+        private void getCombi(
+            List<String> menu, 
+            Map<String, Integer> orderCount, 
+            StringBuilder sb, 
+            int cnt, 
+            int start
+        ) {
+            if (sb.length() == cnt) {
+                String s = sb.toString();
+                orderCount.put(s, orderCount.getOrDefault(s, 0) + 1);
+                return;
+            }
+            
+            for (int i = start; i < menu.size(); i++) {
+                sb.append(menu.get(i));
+                getCombi(menu, orderCount, sb, cnt, i + 1);
+                sb.setLength(sb.length() - 1);
+            }
+        }
+    }
+    ```
+
+
 ---
 
 ## 🥰 배운점 & 느낀점
 
 - 훨씬 코드도 간결하고 속도도 빠른것에 감탄했다. 알고리즘은 역시 많은 케이스를 접하면서 체화시키는게 정답인거 같다.
 - 파이썬이 편하기는 진짜 편한거 같다….
-
----
-
-## 👻 재시도 기록
-
-### 재시도 1회
