@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/junsix_mac/coding-test/coding-test-study/junsik/week01/sample/practice'
+relocations:     []
+...

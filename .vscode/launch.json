@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/junsix_mac/coding-test/coding-test-study/junsik/week01/sample",
+      "program": "/Users/junsix_mac/coding-test/coding-test-study/junsik/week01/sample/build/Debug/outDebug"
+    }
+  ]
+}
