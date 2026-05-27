@@ -4,6 +4,82 @@
 
 - 찾아본 풀이가 굉장히 신박해서 머리를 한 대 얻어맞은 기분이었다… 이런걸 대체 어떻게 떠올리는건지 신기하다…
 
+P & J 트레이닝
+
+- Python으로 1차 풀이를 진행하여 어느정도 풀이를 떠올리기는 했지만 코드로 구현하지 못해 결국 이전에 작성한 write-up을 참고하여 코드를 작성했다.
+    - write-up에 기록했던 풀이 코드가 순간 이해되지 않아서 제미나이에게 해석을 부탁했다.
+        - 🤖 제미나이 해석
+
+          이해하신 대로 이 코드는 `S`, `A`, `B` 세 곳에서 각각 다익스트라를 돌린 후, 마지막에 모든 노드를 돌면서 합산의 최솟값을 찾고 있습니다.
+
+          이 방식이 왜 정답이 되는지, 그리고 서은님이 처음에 생각하신 훌륭한 접근법이 어떻게 이 코드로 연결되는지 차근차근 풀어드릴게요!
+
+          ### 1. 서은님의 원래 아이디어와 이 코드의 연결 고리
+
+          서은님이 생각하신 풀이 과정을 다시 정방향(출발지 기준)으로 정리하면 다음과 같습니다.
+
+          > **"출발점 `S`에서 어떤 지점 `X`까지 같이 택시를 타고 간 다음(동승), 그 지점 `X`에서 헤어져서 한 명은 `A`로, 한 명은 `B`로 따로 간다."**
+          >
+
+          이걸 수식(거리)으로 표현하면 어떻게 될까요?
+
+            - `S`에서 `X`까지의 최단 거리: **`S ➡️ X`**
+            - `X`에서 `A`까지의 최단 거리: **`X ➡️ A`**
+            - `X`에서 `B`까지의 최단 거리: **`X ➡️ B`**
+
+          즉, 우리가 구해야 하는 총비용은 `(S ➡️ X) + (X ➡️ A) + (X ➡️ B)`가 됩니다.
+
+          여기서 가장 중요한 핵심은 "둘이 도대체 어느 지점(`X`)에서 헤어지는 게 가장 이득일까?"입니다.
+
+          경우에 따라서는 아예 처음(출발지 `S`)부터 따로 가는 게 이득일 수도 있고, `A`네 집까지 같이 갔다가 `B`만 더 이동하는 게 이득일 수도 있습니다. 즉, **모든 노드가 환승 지점(`X`)의 후보**가 될 수 있는 것이죠.
+
+          ### 2. 왜 S, A, B 세 곳에서만 다익스트라를 돌릴까?
+
+          그렇다면 모든 후보 지점 `X`(1번 노드부터 $N$번 노드까지)에 대해 전부 다익스트라를 돌려야 할까요? 그건 양이 너무 많아 시간 초과가 날 것입니다.
+
+          여기서 그래프의 양방향성(무방향 그래프)이라는 특성을 이용한 역발상이 들어갑니다.
+
+            - `S ➡️ X`의 최단 거리는?
+
+              👉 `S`에서 출발하는 다익스트라 한 번으로 **모든 `X`에 대한 거리**를 알 수 있습니다. (`costs[0]`)
+
+            - `X ➡️ A`의 최단 거리는?
+
+              👉 도로가 양방향이므로, `X`에서 `A`로 가는 거리나 **`A`에서 `X`로 가는 거리**나 똑같습니다! 따라서 `A`에서 출발하는 다익스트라 한 번이면 **모든 `X`에 대한 거리**를 알 수 있습니다. (`costs[1]`)
+
+            - `X ➡️ B`의 최단 거리는?
+
+              👉 마찬가지로 **`B`에서 `X`로 가는 거리**와 같습니다. `B`에서 출발하는 다익스트라로 해결됩니다. (`costs[2]`)
+
+
+            결과적으로 **`S`, `A`, `B` 세 지점에서만 다익스트라를 딱 한 번씩(총 3번)** 돌려놓으면, 지도상에 존재하는 그 어떤 지점 `X`를 환승지로 고르더라도 `(S ➡️ X) + (X ➡️ A) + (X ➡️ B)` 값을 $O(1)$만에 바로 계산할 수 있게 되는 것입니다.
+            
+            ### 3. 마지막 루프의 의미: "가장 싼 환승지 찾기"
+            
+            이제 준비물이 다 갖춰졌으니, 마지막 루프를 돌며 비교만 하면 됩니다.
+            
+            Python
+            
+            # 
+            
+            ```
+            for i in range(1, n + 1):
+                answer = min(answer, costs[0][i] + costs[1][i] + costs[2][i])
+            ```
+            
+            만약 `i = 5`일 때 이 값이 최소라면? "5번 노드까지 같이 택시를 타고 가다가, 5번 노드에서 찢어져서 각자 집으로 가는 게 제일 싸다!"는 뜻이 됩니다.
+            
+            - 만약 같이 안 타는 게 제일 싸다면 어떻게 될까요? 자연스럽게 `i = s`(출발지)일 때 `costs[0][s]`가 0이 되면서, `(S ➡️ S) + (S ➡️ A) + (S ➡️ B)` 즉, 처음부터 따로 가는 비용이 최솟값으로 선택됩니다.
+            - 만약 `A`네 집까지 같이 가는 게 제일 싸다면? `i = a`일 때 `costs[1][a]`가 0이 되면서 자동으로 그 비용이 선택됩니다.
+            
+            ### 💡 요약하자면
+            
+            이 코드는 다른 기발한 알고리즘을 쓴 게 아니라, **서은님이 생각하신 "어디선가 만나서(헤어져서) 각자 간다"라는 로직을 완벽하게 구현한 코드**입니다.
+            
+            다만 성능을 위해 "헤어지는 지점 `X`를 기준으로 각각 다익스트라를 돌리는 것"이 아니라, 양방향 노드의 성질을 활용해 "목적지인 `S`, `A`, `B`를 기준 삼아 거꾸로 다익스트라를 3번만 돌려놓고 최적의 `X`를 찾아내는 방식"을 선택한 것이죠!
+
+- Java로 2차 풀이를 진행하여 `11분 42초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -425,7 +501,124 @@ def solution(n, s, a, b, fares):
 
 ---
 
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import defaultdict
+    from heapq import heapify, heappush, heappop
+    
+    def solution(n, s, a, b, fares):
+        graph = defaultdict(list)
+        for v1, v2, cost in fares:
+            graph[v1].append((v2, cost))
+            graph[v2].append((v1, cost))
+        
+        visited = [[float('inf')] * (n + 1) for _ in range(3)]
+        
+        # 메인 로직
+        for i, start_v in enumerate([s, a, b]):
+            pq = [(0, start_v)]
+            visited[i][start_v] = 0
+            
+            while pq:
+                cur_t_cost, cur_v = heappop(pq)
+                
+                if cur_t_cost > visited[i][cur_v]:
+                    continue
+                
+                for next_v, cost in graph[cur_v]:
+                    next_t_cost = cur_t_cost + cost
+                    
+                    if next_t_cost < visited[i][next_v]:
+                        heappush(pq, (next_t_cost, next_v))
+                        visited[i][next_v] = next_t_cost
+        
+        answer = float('inf')
+        for i in range(1, n + 1):
+            answer = min(answer, visited[0][i] + visited[1][i] + visited[2][i])
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int solution(int n, int s, int a, int b, int[][] fares) {
+            Map<Integer, List<int[]>> graph = new HashMap<>();
+            for (int[] fare : fares) {
+                graph.computeIfAbsent(fare[0], key -> new ArrayList<>()).add(new int[]{fare[1], fare[2]});
+                graph.computeIfAbsent(fare[1], key -> new ArrayList<>()).add(new int[]{fare[0], fare[2]});
+            }
+            
+            int[][] visited = new int[3][n + 1];
+            for (int i = 0; i < 3; i++) {
+                for (int j = 1; j < n + 1; j++) {
+                    visited[i][j] = Integer.MAX_VALUE;
+                }
+            }
+            
+            // 메인 로직
+            int[] startVertex = {s, a, b};
+            for (int i = 0; i < 3; i++) {
+                PriorityQueue<Node> pq = new PriorityQueue<>((v1, v2) -> {
+                    return Integer.compare(v1.totalCost, v2.totalCost);
+                });
+                pq.offer(new Node(startVertex[i], 0));
+                visited[i][startVertex[i]] = 0;
+                
+                while (!pq.isEmpty()) {
+                    Node cur = pq.poll();
+                    
+                    if (cur.totalCost > visited[i][cur.vertex]) {
+                        continue;
+                    }
+                    
+                    for (int[] next : graph.computeIfAbsent(cur.vertex, key -> new ArrayList<>())) {
+                        int nextTotalCost = cur.totalCost + next[1];
+                        
+                        if (nextTotalCost < visited[i][next[0]]) {
+                            pq.offer(new Node(next[0], nextTotalCost));
+                            visited[i][next[0]] = nextTotalCost;
+                        }
+                    }
+                }
+            }
+            
+            int answer = Integer.MAX_VALUE;
+            for (int i = 1; i < n + 1; i++) {
+                answer = Math.min(answer, visited[0][i] + visited[1][i] + visited[2][i]);
+            }
+                
+            return answer;
+        }
+        
+        class Node {
+            int vertex;
+            int totalCost;
+            
+            public Node(int vertex, int totalCost) {
+                this.vertex = vertex;
+                this.totalCost = totalCost;
+            }
+        }
+    }
+    ```
+
+
+---
+
 ## 🥰 배운점 & 느낀점
 
 - 저번에 풀었던 [등산코스 정하기 문제](https://www.notion.so/19d483e1832f819b987cead4e66ff604?pvs=21)도 신박했는데 이 문제는 더 신박하다… 이런 아이디어를 어떻게 떠올릴 수 있는건지 벽이 느껴진다…
 - 그래도 좌절하지 않고 이 경험을 꾸준히 복습하고 녹여서 응용할 수 있는 연습을 해내야겠다.
+- P & J 트레이닝에서 핵심 풀이는 떠올렸지만 이를 코드로 구현하지 못하였다. 이 문제도 굉장히 좋은 문제이기 때문에 복습할 필요가 있다.
