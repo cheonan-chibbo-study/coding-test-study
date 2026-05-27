@@ -1,4 +1,4 @@
-package week2.wordSerach;
+package study2.week2.wordSerach;
 
 class Solution {
 

@@ -1,4 +1,4 @@
-package week1.구명보트;
+package study2.week1.구명보트;
 
 import java.util.*;
 class Solution {

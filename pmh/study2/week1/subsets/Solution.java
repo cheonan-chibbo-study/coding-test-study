@@ -1,4 +1,4 @@
-package week1.subsets;
+package study2.week1.subsets;
 import java.util.*;
 class Solution {
     public List<List<Integer>> subsets(int[] nums) {

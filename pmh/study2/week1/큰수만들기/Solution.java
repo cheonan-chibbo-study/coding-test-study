@@ -1,4 +1,4 @@
-package week1.큰수만들기;
+package study2.week1.큰수만들기;
 
 import java.util.*;
 class Solution {

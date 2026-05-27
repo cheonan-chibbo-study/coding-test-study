@@ -1,4 +1,4 @@
-package week1.연속된부분수열의합;
+package study2.week1.연속된부분수열의합;
 
 class Solution {
     /*

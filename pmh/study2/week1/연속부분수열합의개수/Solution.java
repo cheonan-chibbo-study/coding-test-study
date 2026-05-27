@@ -1,4 +1,4 @@
-package week1.연속부분수열합의개수;
+package study2.week1.연속부분수열합의개수;
 import java.util.*;
 class Solution {
     public int solution(int[] elements) {

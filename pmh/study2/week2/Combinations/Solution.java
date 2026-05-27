@@ -1,4 +1,4 @@
-package week2.Combinations;
+package study2.week2.Combinations;
 
 import java.util.*;
 class Solution {

@@ -1,4 +1,4 @@
-package week1.숫자의표현;
+package study2.week1.숫자의표현;
 
 class Solution {
     public int solution(int n) {

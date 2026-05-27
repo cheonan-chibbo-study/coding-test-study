@@ -1,4 +1,4 @@
-package week2.BinarySearch;
+package study2.week2.BinarySearch;
 class Solution {
     public int search(int[] nums, int target) {
         int start = 0;

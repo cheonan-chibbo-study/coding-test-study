@@ -1,4 +1,4 @@
-package week1.permutations;
+package study2.week1.permutations;
 
 import java.util.ArrayList;
 import java.util.List;
