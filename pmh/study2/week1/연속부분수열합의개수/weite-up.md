@@ -17,10 +17,13 @@ i=2 : 2 / 2+3 / 2+3+1  ← wrap around
 4. set.size() 를 반환한다.
 시간: O(n²) — 시작점 n개 × 길이 n개  
 공간: O(n²) (set에 담기는 합의 수)
-# 최적화 
+# 최적화
+
 ```java
-package week1.연속부분수열합의개수;
+package study2.week1.연속부분수열합의개수;
+
 import java.util.*;
+
 class Solution {
     public int solution(int[] elements) {
         int n = elements.length;

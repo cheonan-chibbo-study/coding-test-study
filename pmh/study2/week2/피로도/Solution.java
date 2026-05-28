@@ -1,4 +1,4 @@
-package week2.피로도;
+package study2.week2.피로도;
 class Solution {
     /*
 
