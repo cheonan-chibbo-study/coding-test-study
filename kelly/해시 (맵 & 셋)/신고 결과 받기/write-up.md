@@ -2,6 +2,11 @@
 
 `13분 34초`만에 혼자서 문제를 해결할 수 있었다. 큰 어려움 없이 쉽게 문제를 풀었다.
 
+P & J 트레이닝
+
+- Python으로 1차 풀이를 시도하여 `13분 42초`만에 문제를 해결했다.
+- Java로 2차 풀이를 시도하여 `17분 14초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -111,6 +116,81 @@ def solution(id_list, report, k):
 
     return answer
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import defaultdict
+    
+    def solution(id_list, report, k):
+        # 메인 로직
+        history = defaultdict(set)
+        
+        for r in report:
+            req, target = r.split(" ")
+            history[target].add(req)
+        
+        call_count = defaultdict(int)
+        for v in history.values():
+            if len(v) < k:
+                continue
+            
+            for req in v:
+                call_count[req] += 1
+        
+        answer = []
+        for id in id_list:
+            answer.append(call_count[id])
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int[] solution(String[] id_list, String[] report, int k) {
+            Map<String, Set<String>> history = new HashMap<>();
+            for (String r : report) {
+                String[] rSplit = r.split(" ");
+                history.computeIfAbsent(rSplit[1], key -> new HashSet<>()).add(rSplit[0]);
+            }
+            
+            Map<String, Integer> callCount = new HashMap<>();
+            for (String id : id_list) {
+                Set<String> reqs = history.computeIfAbsent(id, key -> new HashSet<>());
+                
+                if (reqs.size() < k) {
+                    continue;
+                }
+                
+                for (String req : reqs) {
+                    callCount.put(req, callCount.getOrDefault(req, 0) + 1);   
+                }
+            }
+            
+            int[] answer = new int[id_list.length];
+            for (int i = 0; i < id_list.length; i++) {
+                answer[i] = callCount.getOrDefault(id_list[i], 0);
+            }
+            
+            return answer;
+        }
+    }
+    ```
+
+
 ---
 
 ## 🥰 배운점 & 느낀점
