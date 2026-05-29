@@ -4,6 +4,11 @@
 
 결론적으로 혼자서 문제를 풀지 못해 풀이를 찾아보았다. 찾아본 풀이로 작성한 코드를 복기하면서 문자열을 다루는 테크닉을 체화할 필요가 있다.
 
+P & J 트레이닝
+
+- Python & Java 모두 풀이를 떠올리지 못해서 이전 write-up을 보고 풀었다.
+- 다음에 복습해서 꼭 혼자서 풀 수 있도록 연습하자!!!!
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -153,3 +158,227 @@ def solution(s):
     
     return answer
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01 - 문자열 연산 활용
+
+    ```python
+    def solution(s):
+        # 메서드
+        def compress(length):
+            words = [s[i:i + length] for i in range(0, len(s), length)]
+            
+            result = ""
+            prev_word = ""
+            count = 1
+            
+            for word in words:
+                if word == prev_word:
+                    count += 1
+                    continue
+                
+                if count > 1:
+                    result += str(count)
+                result += prev_word
+                
+                prev_word = word
+                count = 1
+            
+            if count > 1:
+                result += str(count)
+            result += prev_word
+            
+            return len(result)
+        
+        # 메인 로직
+        if len(s) == 1:
+            return 1
+        
+        return min(compress(i) for i in range(1, (len(s) // 2) + 1))
+    ```
+
+- solution02 - Stack 활용
+
+    ```python
+    def solution(s):
+        # 메인 로직
+        if len(s) == 1:
+            return 1
+        
+        answer = len(s)
+        
+        for length in range(1, (len(s) // 2) + 1):
+            words = [s[i:i + length] for i in range(0, len(s), length)]
+            stack = [[words[0], 1]]
+            
+            for word in words[1:]:
+                if word == stack[-1][0]:
+                    stack[-1][1] += 1
+                else:
+                    stack.append([word, 1])
+            
+            result = ''.join([str(cnt) + w if cnt > 1 else w for w, cnt in stack])
+            answer = min(answer, len(result))
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01 - 문자열 연산 활용
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        
+        String s;
+        
+        public int solution(String s) {
+            this.s = s;
+            
+            // 메인 로직
+            if (s.length() == 1) {
+                return 1;
+            }
+            
+            List<Integer> compressed = new ArrayList<>();
+            for (int length = 1; length < (s.length() / 2) + 1; length++) {
+                compressed.add(compress(length));
+            }
+            
+            return Collections.min(compressed);
+        }
+        
+        private int compress(int length) {
+            List<String> words = getWords(length);
+            StringBuilder sb = new StringBuilder();
+            String prevWord = "";
+            int count = 1;
+            
+            for (String word : words) {
+                if (word.equals(prevWord)) {
+                    count++;
+                    continue;
+                }
+                
+                if (count > 1) {
+                    sb.append(String.valueOf(count));
+                }
+                
+                sb.append(prevWord);
+                
+                prevWord = word;
+                count = 1;
+            }
+            
+            if (count > 1) {
+                sb.append(String.valueOf(count));
+            }
+            sb.append(prevWord);
+            
+            return sb.length();
+        }
+        
+        private List<String> getWords(int length) {
+            List<String> words = new ArrayList<>();
+            
+            int start = 0;
+            while (start + length <= s.length()) {
+                words.add(s.substring(start, start + length));
+                start += length;
+            }
+            
+            if (start < s.length()) {
+                words.add(s.substring(start, s.length()));
+            }
+            
+            return words;
+        }
+    }
+    ```
+
+- solution02 - Stack 활용
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        
+        String s;
+        
+        public int solution(String s) {
+            this.s = s;
+            
+            // 메인 로직
+            int answer = s.length();
+            
+            for (int length = 1; length < (s.length() / 2) + 1; length++) {
+                List<String> words = getWords(length);
+                Deque<Item> stack = new ArrayDeque<>();
+                stack.push(new Item(words.get(0), 1));
+                
+                for (int i = 1; i < words.size(); i++) {
+                    if (stack.peek().word.equals(words.get(i))) {
+                        stack.peek().count++;
+                    } else {
+                        stack.push(new Item(words.get(i), 1));
+                    }
+                }
+                
+                StringBuilder sb = new StringBuilder();
+                for (Item item : stack) {
+                    if (item.count > 1) {
+                        sb.append(String.valueOf(item.count) + item.word);
+                    } else {
+                        sb.append(item.word);
+                    }
+                }
+                
+                answer = Math.min(answer, sb.length());
+            }
+            
+            return answer;
+        }
+        
+        private List<String> getWords(int length) {
+            List<String> words = new ArrayList<>();
+            
+            int start = 0;
+            while (start + length <= s.length()) {
+                words.add(s.substring(start, start + length));
+                start += length;
+            }
+            
+            if (start < s.length()) {
+                words.add(s.substring(start, s.length()));
+            }
+            
+            return words;
+        }
+        
+        class Item {
+            String word;
+            int count;
+            
+            public Item(String word, int count) {
+                this.word = word;
+                this.count = count;
+            }
+        }
+    }
+    ```
+
+
+---
+
+## 🥰 배운점 & 느낀점
+
+- 문자열을 활용하는 다양한 방식 + stack을 활용하는 새로운 사례를 학습할 수 있어 좋았다.
+- 연습해서 비슷한 유형을 만나면 잘 대처할 수 있도록 연습해야겠다.
