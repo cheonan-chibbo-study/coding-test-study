@@ -3,7 +3,7 @@ package study2.week3.전화번호목록;
 import java.util.*;
 class Solution {
     /*
-
+ d
      */
     public boolean solution(String[] phone_book) {
         Arrays.sort(phone_book);
