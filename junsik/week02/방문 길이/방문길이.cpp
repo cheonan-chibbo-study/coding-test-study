@@ -50,7 +50,7 @@ int solution(string dirs) {
             answer++;
             visited.insert(path1);
             visited.insert(path2);
-        }s
+        }
 
         // 5. 현재 위치 갱신
         x = nx;
