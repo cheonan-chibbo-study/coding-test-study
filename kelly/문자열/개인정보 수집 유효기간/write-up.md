@@ -48,6 +48,11 @@ def solution(today, terms, privacies):
     return answer
 ```
 
+P & J 트레이닝
+
+- Python으로 1차 시도를 하여 `19분 49초`만에 문제를 해결했다.
+- Java로 2차 시도를 하여 `18분 36초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -155,6 +160,105 @@ def solution(today, terms, privacies):
     return answer
             
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    def solution(today, terms, privacies):
+        t_map = {}
+        for term in terms:
+            k, v = term.split()
+            t_map[k] = int(v) * 28
+        
+        # 메서드
+        def count_end_day(p):
+            date, term = p.split()
+            return convert_day(date) + t_map[term]
+        
+        def convert_day(date):
+            y, m, d = date.split(".")
+            return (int(y) * 12 * 28) + (int(m) * 28) + int(d)
+        
+        # 메인 로직
+        today_day = convert_day(today)
+        answer = []
+        
+        for i, p in enumerate(privacies):
+            end_day = count_end_day(p)
+            
+            if today_day >= end_day:
+                answer.append(i + 1)
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        
+        String today;
+        String[] terms;
+        String[] privacies;
+        
+        Map<String, Integer> tMap;
+        
+        public int[] solution(String today, String[] terms, String[] privacies) {
+            this.today = today;
+            this.terms = terms;
+            this.privacies = privacies;
+            
+            tMap = new HashMap<>();
+            for (String term : terms) {
+                String[] t = term.split(" ");
+                tMap.put(t[0], Integer.valueOf(t[1]) * 28);
+            }
+            
+            int todayDay = getDay(today);
+            
+            // 메인 로직
+            List<Integer> answer = new ArrayList<>();
+            for (int i = 0; i < privacies.length; i++) {
+                int endDay = getEndDay(privacies[i]);
+                
+                if (todayDay >= endDay) {
+                    answer.add(i + 1);
+                }
+            }
+            
+            int[] answerArr = new int[answer.size()];
+            for (int i = 0; i < answer.size(); i++) {
+                answerArr[i] = answer.get(i);
+            }
+            
+            return answerArr;
+        }
+        
+        private int getEndDay(String privacy) {
+            String[] p = privacy.split(" ");
+            return getDay(p[0]) + tMap.get(p[1]);
+        }
+        
+        private int getDay(String date) {
+            String[] d = date.split("\\.");
+            return (Integer.valueOf(d[0]) * 12 * 28) + 
+                (Integer.valueOf(d[1]) * 28) + 
+                Integer.valueOf(d[2]);
+        }
+    }
+    ```
+
 
 ---
 
