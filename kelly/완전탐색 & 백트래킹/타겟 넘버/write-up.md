@@ -5,6 +5,11 @@
 - 풀이 자체는 금방 떠올렸고, 초기 코드도 금방 작성했지만 시간 초과가 나는 케이스가 몇개 있어 시간을 제법 소요했다.
 - 그래도 혼자서 시간 초과 원인을 찾아 코드를 수정해 문제를 해결하였다.
 
+P & J 트레이닝
+
+- Python으로 1차 시도를 하여 `6분 27초`만에 문제를 해결했다.
+- Java로 2차 시도를 하여 `7분 40초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -61,6 +66,80 @@ def solution(numbers, target):
     
     return answer
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    def solution(numbers, target):
+        # 메서드
+        def recursive(total_sum, seq):
+            if seq == len(numbers):
+                if total_sum == target:
+                    nonlocal answer
+                    answer += 1
+                    
+                return
+            
+            for i in (-1, 1):
+                total_sum += (numbers[seq] * i)
+                recursive(total_sum, seq + 1)
+                total_sum -= (numbers[seq] * i)
+        
+        # 메인 로직
+        answer = 0
+        recursive(0, 0)
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        
+        int[] numbers;
+        int target;
+        int answer;
+        
+        public int solution(int[] numbers, int target) {
+            this.numbers = numbers;
+            this.target = target;
+            this.answer = 0;
+            
+            // 메인 로직
+            recursive(0, 0);
+            return answer;
+        }
+        
+        private void recursive(int totalSum, int seq) {
+            if (seq == numbers.length) {
+                if (totalSum == target) {
+                    answer++;
+                }
+                
+                return;
+            }
+            
+            for (int i : List.of(-1, 1)) {
+                totalSum += (numbers[seq] * i);
+                recursive(totalSum, seq + 1);
+                totalSum -= (numbers[seq] * i);
+            }
+        }
+    }
+    ```
+
 
 ---
 
