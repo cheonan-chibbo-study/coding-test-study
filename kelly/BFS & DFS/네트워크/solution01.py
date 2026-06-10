@@ -1,16 +1,11 @@
-from collections import deque
+from collections import deque, defaultdict
 
 def solution(n, computers):
-    # 전역 데이터
-    board = [[] for _ in range(n)]
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                continue
-
-            if computers[i][j] == 1:
-                board[i].append(j)
-                board[j].append(i)
+    graph = defaultdict(list)
+    for node in range(n):
+        for conn in range(len(computers[node])):
+            if computers[node][conn] == 1:
+                graph[node].append(conn)
 
     # 메서드
     def bfs(start):
@@ -19,7 +14,8 @@ def solution(n, computers):
 
         while dq:
             cur = dq.popleft()
-            for next in board[cur]:
+
+            for next in graph[cur]:
                 if visited[next]:
                     continue
 
