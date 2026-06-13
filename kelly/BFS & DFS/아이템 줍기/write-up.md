@@ -5,6 +5,13 @@
 - 풀이 자체는 올바른 풀이법을 금방 떠올릴 수 있었다.
 - 하지만 코드 작성 과정에서 실수 + 예상하지 못한 논리 오류로 인해 테스트 케이스 1개만 통과했다.
 
+P & J 트레이닝
+
+- 혼자서 푸는데 실패했다. 풀이는 떠올렸지만 몇몇 아이디어가 잘못되었다.
+    - 그래프 초기화해서 조건 설정을 잘못했다.
+    - `ㄷ` 케이스를 위해 스케일 2배 증가를 해야했다.
+- 문제 자체가 이제는 어렵지 않지만 아이디어 실수가 자주 발생하는 문제이다. 좋은 문제이니 복습해서 다음에는 꼭 혼자서 풀 수 있도록 하자!!!
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -367,6 +374,126 @@ def solution(rectangle, characterX, characterY, itemX, itemY):
   First, 배열의 인덱스는 0부터 시작하므로 최댓값 좌표인 $N$에 접근하기 위해서는 배열의 크기가 최소 $N+1$이어야 합니다.
 
   Second, 여기에 크기를 1 더 추가하여 $N+2$로 선언하면, 사용되는 유효 좌표 공간 바깥으로 1칸 두께의 패딩(Padding) 영역이 형성됩니다. 이는 BFS나 DFS 같은 그래프 탐색 알고리즘이 맵의 가장자리 끝에서 인접한 좌표를 탐색할 때 배열의 경계를 벗어나는 치명적인 에러를 구조적으로 방지해 주어 구현의 복잡도를 낮추는 장점이 있습니다.
+
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import deque
+    
+    def solution(rectangle, characterX, characterY, itemX, itemY):
+        graph_size = 104
+        graph = [[0] * graph_size for _ in range(graph_size)]
+        
+        for x1, y1, x2, y2 in rectangle:
+            x1, y1, x2, y2 = x1 * 2, y1 * 2, x2 * 2, y2 * 2
+            
+            for row in range(y1, y2 + 1):
+                for col in range(x1, x2 + 1):
+                    if y1 < row < y2 and x1 < col < x2:
+                        graph[row][col] = -1;
+                    elif graph[row][col] == 0:
+                        graph[row][col] = 1
+            
+        # 메인 로직
+        start_r, start_c, target_r, target_c = characterY * 2, characterX * 2, itemY * 2, itemX * 2
+            
+        dq = deque([(start_r, start_c, 0)])
+        visited = [[False] * graph_size for _ in range(graph_size)]
+        visited[start_r][start_c] = True
+            
+        while dq:
+            cur_r, cur_c, step = dq.popleft()
+                
+            if (cur_r, cur_c) == (target_r, target_c):
+                return step // 2
+                
+            for dr, dc in ((-1, 0), (0, -1), (0, 1), (1, 0)):
+                next_r, next_c = dr + cur_r, dc + cur_c
+                    
+                if graph[next_r][next_c] != 1 or visited[next_r][next_c]:
+                    continue
+                    
+                dq.append((next_r, next_c, step + 1))
+                visited[next_r][next_c] = True
+            
+        return -1
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
+            int[][] dir = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
+            int graphSize = 104;
+            int[][] graph = new int[graphSize][graphSize];
+            
+            for (int[] r : rectangle) {
+                int x1 = r[0] * 2;
+                int y1 = r[1] * 2;
+                int x2 = r[2] * 2;
+                int y2 = r[3] * 2;
+                
+                for (int row = y1; row <= y2; row++) {
+                    for (int col = x1; col <= x2; col++) {
+                        if ((row > y1 && row < y2) && (col > x1 && col < x2)) {
+                            graph[row][col] = -1;
+                        } else if (graph[row][col] == 0) {
+                            graph[row][col] = 1;
+                        }
+                    }
+                }
+            }
+            
+            // 메인 로직
+            int startR = characterY * 2;
+            int startC = characterX * 2;
+            int targetR = itemY * 2;
+            int targetC = itemX * 2;
+            
+            Deque<int[]> dq = new ArrayDeque<>();
+            boolean[][] visited = new boolean[graphSize][graphSize];
+            
+            dq.offer(new int[]{startR, startC, 0});
+            visited[startR][startC] = true;
+            
+            while (!dq.isEmpty()) {
+                int[] cur = dq.poll();
+                
+                if (cur[0] == targetR && cur[1] == targetC) {
+                    return cur[2] / 2;
+                }
+                
+                for (int[] d : dir) {
+                    int nextR = cur[0] + d[0];
+                    int nextC = cur[1] + d[1];
+                    
+                    if (graph[nextR][nextC] != 1 || visited[nextR][nextC]) {
+                        continue;
+                    }
+                    
+                    dq.offer(new int[]{nextR, nextC, cur[2] + 1});
+                    visited[nextR][nextC] = true;
+                }
+            }
+            
+            return -1;
+        }
+    }
+    ```
+
 
 ---
 
