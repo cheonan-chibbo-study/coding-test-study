@@ -4,6 +4,23 @@
 
 - 그리고 솔직히 풀이를 보고도 어떻게 저런 공식이 도출되는건지 이해가 되지 않아 제미나이와 함께 살펴봤다.
 
+P & J 트레이닝
+
+- 혼자서 문제를 해결하지 못했다.
+    - 어찌어찌 코드를 작성하여 테스트 케이스는 모두 맞았지만 최종 제출에서 정확도 76.9로 문제를 통과하지 못했다.
+    - 작성한 코드
+
+        ```python
+        def solution(brown, yellow):
+            for col in range(2, brown):
+                for row in range(2, col + 1):
+                    if (col * row) - yellow == brown:
+                        return [col, row]
+        ```
+
+- 결과적으로 내가 작성한 코드는 몇몇 예외 사항을 잡지 못하기 때문에 통과하지 못했다.
+- 이 문제는 생각보다 엣지 케이스를 잘 따져야 풀 수 있는 문제이다. 제법 좋은 문제니 잘 복습해서 다음번에는 꼭 한번에 풀 수 있도록 연습하자.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -26,7 +43,7 @@
 
 문제 풀이는 아래 유튜브 영상을 참고했다. 설명을 굉장히 잘해준다.
 
-[프로그래머스 - 카펫](https://www.youtube.com/watch?v=weC1vkQRX_E)
+프로그래머스 - 카펫
 
 우선 카펫의 전체 넓이를 구하는건 어렵지 않다. 카펫의 전체 넓이를 `area`라고 가정하면, `area`는 다음과 같다.
 
@@ -133,6 +150,54 @@ def solution(brown, yellow):
             if (w - 2) * (h - 2) == yellow:
                 return [w, h]
 ```
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    def solution(brown, yellow):
+        area = brown + yellow
+        
+        for h in range(3, int(area ** 0.5) + 1):
+            if area % h != 0:
+                continue
+            
+            w = area // h
+            if (w - 2) * (h - 2) == yellow:
+                return [w, h]
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    class Solution {
+        public int[] solution(int brown, int yellow) {
+            int area = brown + yellow;
+            
+            for (int h = 3; h <= (int) Math.pow(area, 0.5); h++) {
+                if (area % h != 0) {
+                    continue;
+                }
+                
+                int w = area / h;
+                if ((w - 2) * (h - 2) == yellow) {
+                    return new int[]{w, h};
+                }
+            }
+            
+            return new int[]{-1, -1};
+        }
+    }
+    ```
+
 
 ---
 
