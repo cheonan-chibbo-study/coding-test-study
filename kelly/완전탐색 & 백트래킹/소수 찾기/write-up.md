@@ -2,6 +2,13 @@
 
 제한 시간 `30분` + 추가 시간 `4분 4초`만에 문제를 풀었지만… 중간에 코드 구현이 막혀 몇몇 부분을 서치하면서 풀 수 있었다.
 
+P & J 트레이닝
+
+- Python으로 1차 풀이를 시도하여 `17분 59초`만에 문제를 해결했다.
+- Java로 2차 풀이를 시도하여 `10분 08초`만에 문제를 해결했다.
+- 0과 1은 소수가 아니다… 소수는 `1보다 큰 수`라는 규칙이 있다.
+- n의 약수는 `1 ~ n^0.5`에만 존재한다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -125,6 +132,137 @@ def solution(numbers):
 
 - 소수 판별 로직을 2 ~ x까지 검사하는 방식이 아니라 정수 x에 대한 제곱근(Square Root)까지만 계산하는 방식으로 개선되었다.
 - candi를 구하는 과정을 속도가 빠른 `permutations` 내장 함수를 사용하도록 개선되었다.
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    def solution(numbers):
+        nums = [n for n in numbers]
+        
+        # 메서드
+        def recursive(temp):
+            if len(temp) == len(nums):
+                return
+            
+            for i in range(len(nums)):
+                if visited[i]:
+                    continue
+                
+                temp.append(nums[i])
+                visited[i] = True
+                candi.add(int(''.join(temp)))
+                recursive(temp)
+                
+                temp.pop()
+                visited[i] = False
+        
+        def is_target(num):
+            if num in (0, 1):
+                return False
+            
+            if num in (2, 3):
+                return True
+            
+            for i in range(2, int(num ** 0.5) + 1):
+                if num % i == 0:
+                    return False
+            
+            return True
+                
+        # 메인 로직
+        candi = set()
+        visited = [False] * len(nums)
+        recursive([])
+        
+        answer = 0
+        for c in candi:
+            if is_target(c):
+                answer += 1
+        
+        return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        
+        String[] nums;
+        Set<Integer> candi;
+        
+        public int solution(String numbers) {
+            this.nums = new String[numbers.length()];
+            for (int i = 0; i < numbers.length(); i++) {
+                nums[i] = String.valueOf(numbers.charAt(i));
+            }
+            
+            this.candi = new HashSet<>();
+            
+            // 메인 로직
+            boolean[] visited = new boolean[nums.length];
+            recursive(new StringBuilder(), visited);
+            
+            int answer = 0;
+            for (int num : candi) {
+                if (isTarget(num)) {
+                    answer++;
+                }
+            }
+            
+            return answer;
+        }
+        
+        private void recursive(StringBuilder sb, boolean[] visited) {
+            if (sb.length() == nums.length) {
+                return;
+            }
+            
+            for (int i = 0; i < nums.length; i++) {
+                if (visited[i]) {
+                    continue;
+                }
+                
+                sb.append(nums[i]);
+                visited[i] = true;
+                candi.add(Integer.valueOf(sb.toString()));
+                recursive(sb, visited);
+                
+                sb.delete(sb.length() - 1, sb.length());
+                visited[i] = false;
+            }
+        }
+        
+        private boolean isTarget(int num) {
+            if (num == 0 || num == 1) {
+                return false;
+            }
+            
+            if (num < 4) {
+                return true;
+            }
+            
+            for (int i = 2; i <= (int) Math.pow(num, 0.5); i++) {
+                if (num % i == 0) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+    }
+    ```
+
 
 ---
 
