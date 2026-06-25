@@ -32,6 +32,11 @@ class Solution:
         return answer
 ```
 
+P & J 트레이닝
+
+- Python으로 시도하여 `8분 19초`만에 문제를 해결했다.
+- Java로 시도하여 `3분 47초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -170,6 +175,70 @@ class Solution:
 ## 🧑‍💻 최종 정답 코드
 
 ### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import deque
+    
+    class Solution:
+        def lengthOfLongestSubstring(self, s: str) -> int:
+            answer = 0
+            dq = deque()
+    
+            for v in s:
+                if v not in dq:
+                    dq.append(v)
+                    answer = max(answer, len(dq))
+                    continue
+                
+                while dq:
+                    popped = dq.popleft()
+                    if popped == v:
+                        break
+                
+                dq.append(v)
+            
+            return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public int lengthOfLongestSubstring(String s) {
+            Deque<Character> dq = new ArrayDeque<>();
+            int answer = 0;
+    
+            for (int i = 0; i < s.length(); i++) {
+                char cur = s.charAt(i);
+    
+                if (!dq.contains(cur)) {
+                    dq.offer(cur);
+                    answer = Math.max(answer, dq.size());
+                    continue;
+                }
+    
+                while (!dq.isEmpty()) {
+                    char popped = dq.poll();
+                    if (popped == cur) {
+                        break;
+                    }
+                }
+    
+                dq.offer(cur);
+            }
+    
+            return answer;
+        }
+    }
+    ```
+
 
 ---
 
