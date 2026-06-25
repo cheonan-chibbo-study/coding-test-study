@@ -16,6 +16,11 @@ class Solution:
         return list(groups.values())
 ```
 
+P & J 트레이닝
+
+- Python으로 시도하여 `10분 16초`만에 문제를 해결했다.
+- Java로 시도하여 `6분 47초`만에 문제를 해결했다.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -163,6 +168,60 @@ class Solution:
 - 딕셔너리의 값들을 리스트로 만들고 싶다면 다음과 같이 하면 된다.
     - `list(dict.values())`
     - `dict.values()` 는 이터러블 객체이지, list가 아니라서 변환이 한 번 필요하다.
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import defaultdict
+    
+    class Solution:
+        def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+            graph = defaultdict(list)
+    
+            for v in strs:
+                graph[''.join(sorted(v))].append(v)
+            
+            return [v for v in graph.values()]
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public List<List<String>> groupAnagrams(String[] strs) {
+            Map<String, List<String>> graph = new HashMap<>();
+    
+            for (String v : strs) {
+                graph.computeIfAbsent(strSort(v), key -> new ArrayList<>()).add(v);
+            }
+    
+            List<List<String>> answer = new ArrayList<>();
+            for (List<String> v : graph.values()) {
+                answer.add(v);
+            }
+    
+            return answer;
+        }
+    
+        private String strSort(String v) {
+            char[] cArr = v.toCharArray();
+            Arrays.sort(cArr);
+            return new String(cArr);
+        }
+    }
+    ```
+
 
 ---
 
