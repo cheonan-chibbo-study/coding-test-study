@@ -56,6 +56,11 @@ class Solution:
         return answer
 ```
 
+P & J 프로젝트
+
+- 혼자서 문제를 풀지 못했다. 풀이법조차 떠올릴 수 없었다.
+- 슬라이딩 윈도우 & 투 포인터를 떠올려야 하는 문제이다. 생각보다 어려운 문제였는데 잘 복습해서 다음에는 꼭 혼자서 풀 수 있도록 하자.
+
 ---
 
 ## 🧑‍🔬 문제 분석
@@ -96,7 +101,7 @@ class Solution:
 
 아래 블로그 풀이가 직관적이기도 하고 이 풀이로 작성한 코드가 내가 처음 작성한 코드보다 훨씬 빠른 시간으로 통과되어서 이 풀이를 참고하기로 결정했다. 자세한 풀이는 블로그를 참고하자.
 
-[76. Minimum Window Substring](https://velog.io/@ysinfrance/76.-Minimum-Window-Substring)
+76. Minimum Window Substring
 
 ### 결론
 
@@ -311,6 +316,112 @@ class Solution:
       '검사형 알고리즘'이 아니라
       '상태 유지형 알고리즘'이기 때문에
       더 빠르다.
+
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01
+
+    ```python
+    from collections import defaultdict
+    
+    class Solution:
+        def minWindow(self, s: str, t: str) -> str:
+            t_count = len(t)
+            target = defaultdict(int)
+            for ch in t:
+                target[ch] += 1
+            
+            l, r = 0, 0
+            min_len = float('inf')
+            answer = ""
+    
+            while r < len(s):
+                if s[r] in target:
+                    target[s[r]] -= 1
+                
+                    if target[s[r]] >= 0:
+                        t_count -= 1
+                
+                while t_count == 0:
+                    if r - l - 1 < min_len:
+                        min_len = r - l - 1
+                        answer = s[l:r + 1]
+                    
+                    if s[l] in target:
+                        target[s[l]] += 1
+    
+                        if target[s[l]] > 0:
+                            t_count += 1
+                
+                    l += 1
+                
+                r += 1
+    
+            return answer
+    ```
+
+
+### Java 풀이
+
+- solution01
+
+    ```java
+    import java.util.*;
+    
+    class Solution {
+        public String minWindow(String s, String t) {
+            int tCount = t.length();
+            Map<Character, Integer> target = new HashMap<>();
+            for (char ch : t.toCharArray()) {
+                target.put(ch, target.getOrDefault(ch, 0) + 1);
+            }
+    
+            int l = 0;
+            int r = 0;
+            int minLen = Integer.MAX_VALUE;
+            String answer = "";
+    
+            while (r < s.length()) {
+                char curCh = s.charAt(r);
+    
+                if (target.containsKey(curCh)) {
+                    target.put(curCh, target.get(curCh) - 1);
+                    
+                    if (target.get(curCh) >= 0) {
+                        tCount -= 1;
+                    }
+                }
+    
+                while (tCount == 0) {
+                    if (r - l + 1 < minLen) {
+                        minLen = r - l + 1;
+                        answer = s.substring(l, r + 1);
+                    }
+    
+                    char lCh = s.charAt(l);
+                    if (target.containsKey(lCh)) {
+                        target.put(lCh, target.get(lCh) + 1);
+    
+                        if (target.get(lCh) > 0) {
+                            tCount += 1;
+                        }
+                    }
+    
+                    l += 1;
+                }
+    
+                r += 1;
+            }
+    
+            return answer;
+        }
+    }
+    ```
 
 
 ---
