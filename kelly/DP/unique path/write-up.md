@@ -1,0 +1,262 @@
+## 👀 제한 시간 안에 어디까지 해냈는가?
+
+제한 시간 `30분`안에 혼자 문제를 푸는데 성공했다. 직접 설계한 풀이와 코드는 아래 내용들을 참고하자.
+
+P & J 트레이닝
+
+- 이번에도 혼자 문제를 풀지 못했다…
+- 배열 범위를 벗어나는 경우를 어떻게 해결할지 방법을 찾지 못했다.
+
+---
+
+## 🧑‍🔬 문제 분석
+
+격자의 크기 m, n이 주어졌을 때 로봇이 (0, 0) 위치에서 출발하여 (m - 1, n - 1) 위치를 향해 하/우 방향으로만 이동했을 때 도달할 수 있는 모든 경로의 개수를 반환하는 문제이다.
+
+문제에 주어지는 제약 조건은 다음과 같다.
+
+**Constraints:**
+
+- `1 <= m, n <= 100`
+
+---
+
+## 🤔 풀이 고민
+
+### 혼자서 생각해낸 풀이
+
+격자 문제이기 때문에 BFS나 DFS로 풀 수 있지 않을까 생각했지만 DP 학습을 위한 문제이기 때문에 DP로 풀 수 없는지 고민해봤다.
+
+- 참고로 이 문제는 BFS & DFS로 풀 수 없다. 도착지 까지 가는 모든 경로를 탐색하는 문제이기 때문에 완전 탐색 문제이기 때문이다. (모든 경우의 수를 전부 접근해야 하는 문제)
+- 하지만 모든 경우를 탐색하는 풀이는 시간 초과를 발생시킨다. (조합 문제이기 때문에)
+    - `m+n-2 C m-1`
+
+문제 자체가 단순하고 이전에 풀었던 문제들 덕분에 점화식을 빠르게 찾아낼 수 있었다. 내가 직접 설계한 점화식은 다음과 같다.
+
+`(r, c)에 도달할 수 있는 모든 경로 수 = F(r - 1, c) + F(r, c - 1)`
+
+로봇은 모든 이동을 우/하 방향으로만 가능하기 때문에 결국 경로 수를 알고 싶은 위치를 기준으로 윗 방향에 도달하기 까지의 모든 경로 + 왼쪽 방향에 도달하기 까지의 모든 경로를 더해주면 해당 지점에 도달할 수 있는 모든 경로 수를 구할 수 있게된다.
+
+- (0, 0) 시작점에 경우 1을 반환한다.
+- 격자 범위를 넘어서는 지점은 0을 반환한다.
+
+위 점화식을 사용해 top-down 혹은 bottom-up으로 코드를 작성하면 문제를 해결할 수 있다.
+
+### 찾아본 풀이
+
+다른 사람의 풀이를 찾아봤는데 대체로 나와 비슷한 점화식을 사용함을 확인할 수 있었다.
+
+- 꿀팁도 얻었는데 어짜피 (0, 0 ~ n)과 (0 ~ m, 0)은 모두 1로 들어간다. 애초에 직선 이동 외에는 다른 경로로 이 지점들에 접근할 방법이 아예 없기 때문이다.
+- 이 부분을 인지하지 못해서 bottom-up 코드를 작성할 때 에러가 발생했다.
+
+주어진 이차원 리스트에는 장애물이 존재하지 않기에 좌측 상단에서 우측 하단으로 가는 최단 경로에는 좌측, 상단 이동이 포함되지 않는다. 그렇기에 임의의 한 칸에 도달하는 경우의 수는 우측 이동으로 도달하는 경우와 하단 이동으로 도달하는 경우 두 가지이다.
+
+그렇기에 다음과 같은 점화식을 유도할 수 있다.
+
+$$
+F(r, c) = F(r-1, c) + F(r, c-1)\\F(0, c) = 1\\F(r, 0) = 1
+$$
+
+해당 점화식을 통해 top-down, bottom-up방식으로 코드를 구현할 수 있는데 이 때 중복되는 값을 구하는 소요가 생기며 이를 memoization을 통한 중복 제거로 최적화 할 수 있다.
+
+### 결론
+
+- 내가 처음 설계한 점화식을 활용해 top-down or bottom-up 방식으로 DP 코드를 작성하면 문제를 해결할 수 있다.
+- 가장 자리는 직선 경로만 존재하므로 모두 1로 초기화 하는 로직이 사전에 필요함을 인지해야한다.
+
+---
+
+## 🏃 코드 작성 과정
+
+### 내가 처음 작성한 코드
+
+**[ top-down ]**
+
+```python
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        # 전역 데이터
+        costs = [[None] * n for _ in range(m)]
+        for r in range(m):
+            costs[r][0] = 1
+        for c in range(n):
+            costs[0][c] = 1
+
+        # 메서드
+        def dp(r, c):
+            if r < 0 or r >= m or c < 0 or c >= n:
+                return 0
+
+            if not costs[r][c]:
+                costs[r][c] = dp(r - 1, c) + dp(r, c - 1)
+            
+            return costs[r][c]
+
+        # 메인 로직
+        return dp(m - 1, n - 1)
+```
+
+**[ bottom-up ]**
+
+```python
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        # 전역 데이터
+        costs = [[None] * n for _ in range(m)]
+        for r in range(m):
+            costs[r][0] = 1
+        for c in range(n):
+            costs[0][c] = 1
+
+        # 메인 로직
+        for r in range(1, m):
+            for c in range(1, n):
+                costs[r][c] = costs[r-1][c] + costs[r][c-1]
+
+        return costs[m-1][n-1]
+```
+
+### 찾아본 풀이로 작성한 코드
+
+X
+
+---
+
+## 🧑‍💻 최종 정답 코드
+
+### Python 풀이
+
+- solution01 - Top down
+
+    ```python
+    class Solution:
+        def uniquePaths(self, m: int, n: int) -> int:
+            memo = [[None] * n for _ in range(m)]
+            memo[0][0] = 0
+    
+            for r in range(m):
+                memo[r][0] = 1
+            
+            for c in range(n):
+                memo[0][c] = 1
+    
+            # 메서드
+            def dp(r, c):
+                if r < 0 or r >= m or c < 0 or c >= n:
+                    return 0
+                
+                if memo[r][c] is None:
+                    memo[r][c] = dp(r - 1, c) + dp(r, c - 1)
+                
+                return memo[r][c]
+            
+            # 메인 로직
+            return dp(m - 1, n - 1)
+    ```
+
+- solution02 - Bottom up
+
+    ```python
+    class Solution:
+        def uniquePaths(self, m: int, n: int) -> int:
+            dp = [[None] * n for _ in range(m)]
+            dp[0][0] = 0
+    
+            for r in range(m):
+                dp[r][0] = 1
+            
+            for c in range(n):
+                dp[0][c] = 1
+            
+            for r in range(1, m):
+                for c in range(1, n):
+                    dp[r][c] = dp[r - 1][c] + dp[r][c - 1]
+            
+            return dp[m - 1][n - 1]
+    ```
+
+
+### Java 풀이
+
+- solution01 - Top down
+
+    ```java
+    class Solution {
+    
+        int m;
+        int n;
+        int[][] memo;
+    
+        public int uniquePaths(int m, int n) {
+            this.m = m;
+            this.n = n;
+            this.memo = new int[m][n];
+    
+            for (int r = 0; r < m; r++) {
+                for (int c = 0; c < n; c++) {
+                    memo[r][c] = -1;
+                }
+            }
+    
+            memo[0][0] = 0;
+    
+            for (int r = 0; r < m; r++) {
+                memo[r][0] = 1;
+            }
+    
+            for (int c = 0; c < n; c++) {
+                memo[0][c] = 1;
+            }
+    
+            // 메인 로직
+            return dp(m - 1, n - 1);
+        }
+    
+        private int dp(int r, int c) {
+            if (r < 0 || r >= m || c < 0 || c >= n) {
+                return 0;
+            }
+    
+            if (memo[r][c] == -1) {
+                memo[r][c] = dp(r - 1, c) + dp(r, c - 1);
+            }
+    
+            return memo[r][c];
+        }
+    }
+    ```
+
+- solution02 - Bottom up
+
+    ```java
+    class Solution {
+        public int uniquePaths(int m, int n) {
+            int[][] dp = new int[m][n];
+            dp[0][0] = 0;
+    
+            for (int r = 0; r < m; r++) {
+                dp[r][0] = 1;
+            }
+    
+            for (int c = 0; c < n; c++) {
+                dp[0][c] = 1;
+            }
+    
+            for (int r = 1; r < m; r++) {
+                for (int c = 1; c < n; c++) {
+                    dp[r][c] = dp[r - 1][c] + dp[r][c - 1];
+                }
+            }
+    
+            return dp[m - 1][n - 1];
+        }
+    }
+    ```
+
+
+---
+
+## 🥰 배운점 & 느낀점
+
+- 이번 문제는 혼자 점화식을 세워서 top-down 코드를 작성하고 최종 정답 처리를 받는데 성공했다.
+- 이전 문제들과 이번 문제를 복습하며 계속 여러 문제를 접하고 감각을 키우다 보면 언젠가는 DP를 기업 코테에서 풀 날이 올 것이다. 매일 꾸준하게 열심히 하는게 유일한 살길이다.
