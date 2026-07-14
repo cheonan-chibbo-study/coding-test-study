@@ -25,7 +25,7 @@ class Solution {
         if(memo[r][c] != 0){
             return memo[r][c];
         }
-        memo[r][c] = dfs(r-1.c) + dfs(r,c-1);
+        memo[r][c] = dfs(r-1,c) + dfs(r,c-1);
         return memo[r][c];
 
     }
