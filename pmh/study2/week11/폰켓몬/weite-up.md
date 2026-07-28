@@ -19,5 +19,4 @@ https://school.programmers.co.kr/learn/courses/30/lessons/1845
 
 - **공간 복잡도:** `O(n)`
     - 최악의 경우 모든 포켓몬이 서로 다른 종류라면 `HashMap`에 `n`개의 종류가 저장된다.
-# 배운점
 # 배운점 
